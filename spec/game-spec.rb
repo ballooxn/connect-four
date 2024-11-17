@@ -1,9 +1,53 @@
 require_relative "../lib/game"
 
 describe Game do
-  describe "game_over?" do
-    context "when horizontal win" do
-      "returns "
+  describe "game_over?" do # rubocop:disable Metrics/BlockLength
+    context "when red horizontal win" do
+      board = [Array.new(7, "_"), Array.new(7, "_"), Array.new(7, "_"), %w[_ _ _ red red red red], Array.new(7, "_"),
+               Array.new(7, "_")]
+      subject(:red_horiz) { described_class.new(board) }
+
+      it "returns red" do
+        expect(red_horiz.game_over?("red")).to eq("red")
+      end
+    end
+
+    context "when red vertical win" do
+      board = [Array.new(7, "_"), Array.new(7, "_"), %w[_ _ _ _ _ red _], %w[_ _ _ _ _ red _], %w[_ _ _ _ _ red _],
+               %w[_ _ _ _ _ red _]]
+      subject(:red_vert) { described_class.new(board) }
+
+      it "returns red" do
+        expect(red_vert.game_over?("red")).to eq("red")
+      end
+    end
+
+    context "when left-down diagonal" do
+      board = [Array.new(7, "_"), Array.new(7, "_"), %w[_ _ red _ _ _ _], %w[_ _ _ red _ _ _], %w[_ _ _ _ red _ _],
+               %w[_ _ _ _ _ red _]]
+      subject(:red_diag) { described_class.new(board) }
+
+      it "returns red" do
+        expect(red_diag.game_over?("red")).to eq("red")
+      end
+    end
+
+    context "when left-up diagonal" do
+      board = [Array.new(7, "_"), Array.new(7, "_"), %w[_ _ _ _ _ yellow _], %w[_ _ _ _ yellow _ _], %w[_ _ _ yellow _ _ _],
+               %w[_ _ yellow _ _ _ _]]
+      subject(:yellow_diag) { described_class.new(board) }
+
+      it "returns yellow" do
+        expect(yellow_diag.game_over?("yellow")).to eq("yellow")
+      end
+    end
+
+    context "when no winner" do
+      subject(:no_winner) { described_class.new }
+
+      it "returns false" do
+        expect(no_winner.game_over?("yellow")).to be_falsey
+      end
     end
   end
 
@@ -56,7 +100,7 @@ describe Game do
       end
       it "checks for valid_input thrice" do
         expect(get_input).to receive(:valid_input?).exactly(3).times
-        get_input.player_input(player_one)
+        get_input.player_input("red")
       end
     end
   end
