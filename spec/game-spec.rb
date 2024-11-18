@@ -52,6 +52,14 @@ describe Game do
   end
 
   describe "place_on_board" do
+    context "given 'red' and (2, 2)" do
+      subject(:board_placing) { described_class.new }
+
+      it "places a 'red' at [2][2]" do
+        board_placing.place_on_board("red", 2, 2)
+        expect(board_placing.instance_variable_get(:@board)[2][2]).to eq("red")
+      end
+    end
   end
 
   describe "valid_input?" do

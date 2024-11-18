@@ -3,10 +3,11 @@ require_relative "display"
 class Game
   include Display
 
-  def initialize(board = Array.new(6) { Array.new(7, "_") }, input = [])
+  def initialize(board = Array.new(6) { Array.new(7, "_") }, input = [], turns = 0)
     @player_one = "red"
     @player_two = "yellow"
     @winner = nil
+    @turns = turns
 
     @input = input
 
@@ -23,7 +24,7 @@ class Game
     until @winner
       curr_player = curr_player == "yellow" ? "red" : "yellow" # swap player every turn
       @input = player_input
-      place_on_board(input[0].to_i, input[1].to_i)
+      place_on_board(curr_player, input[0].to_i, input[1].to_i)
 
       @winner = game_over?(player)
     end
@@ -46,7 +47,8 @@ class Game
     true
   end
 
-  def place_on_board(x, y)
+  def place_on_board(player, x, y)
+    @board[x][y] = player
   end
 
   def game_over?(player)
