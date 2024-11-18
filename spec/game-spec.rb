@@ -3,42 +3,49 @@ require_relative "../lib/game"
 describe Game do
   describe "game_over?" do # rubocop:disable Metrics/BlockLength
     context "when red horizontal win" do
-      board = [Array.new(7, "_"), Array.new(7, "_"), Array.new(7, "_"), %w[_ _ _ red red red red], Array.new(7, "_"),
+      board = [Array.new(7, "_"), Array.new(7, "_"), Array.new(7, "_"), %w[_ _ _ r r r r], Array.new(7, "_"),
                Array.new(7, "_")]
       subject(:red_horiz) { described_class.new(board) }
 
       it "returns red" do
-        expect(red_horiz.game_over?("red")).to eq("red")
+        expect(red_horiz.game_over?("r")).to eq("r")
       end
     end
 
     context "when red vertical win" do
-      board = [Array.new(7, "_"), Array.new(7, "_"), %w[_ _ _ _ _ red _], %w[_ _ _ _ _ red _], %w[_ _ _ _ _ red _],
-               %w[_ _ _ _ _ red _]]
+      board = [Array.new(7, "_"), Array.new(7, "_"), %w[_ _ _ _ _ r _], %w[_ _ _ _ _ r _], %w[_ _ _ _ _ r _],
+               %w[_ _ _ _ _ r _]]
       subject(:red_vert) { described_class.new(board) }
 
       it "returns red" do
-        expect(red_vert.game_over?("red")).to eq("red")
+        expect(red_vert.game_over?("r")).to eq("r")
       end
     end
 
     context "when left-down diagonal" do
-      board = [Array.new(7, "_"), Array.new(7, "_"), %w[_ _ red _ _ _ _], %w[_ _ _ red _ _ _], %w[_ _ _ _ red _ _],
-               %w[_ _ _ _ _ red _]]
+      board = [Array.new(7, "_"), Array.new(7, "_"), %w[_ _ r _ _ _ _], %w[_ _ _ r _ _ _], %w[_ _ _ _ r _ _],
+               %w[_ _ _ _ _ r _]]
       subject(:red_diag) { described_class.new(board) }
 
       it "returns red" do
-        expect(red_diag.game_over?("red")).to eq("red")
+        expect(red_diag.game_over?("r")).to eq("r")
       end
     end
 
     context "when left-up diagonal" do
-      board = [Array.new(7, "_"), Array.new(7, "_"), %w[_ _ _ _ _ yellow _], %w[_ _ _ _ yellow _ _], %w[_ _ _ yellow _ _ _],
-               %w[_ _ yellow _ _ _ _]]
+      board = [Array.new(7, "_"), Array.new(7, "_"), %w[_ _ _ _ _ y _], %w[_ _ _ _ y _ _], %w[_ _ _ y _ _ _],
+               %w[_ _ y _ _ _ _]]
       subject(:yellow_diag) { described_class.new(board) }
 
       it "returns yellow" do
-        expect(yellow_diag.game_over?("yellow")).to eq("yellow")
+        expect(yellow_diag.game_over?("y")).to eq("y")
+      end
+    end
+
+    context "when turns = 42" do
+      subject(:tie) { described_class.new(Array.new(6) { Array.new(7, "_") }, [], 42) }
+      it "returns 'tie'" do
+        expect(tie.game_over?("r")).to eq("tie")
       end
     end
 
@@ -46,7 +53,7 @@ describe Game do
       subject(:no_winner) { described_class.new }
 
       it "returns false" do
-        expect(no_winner.game_over?("yellow")).to be_falsey
+        expect(no_winner.game_over?("y")).to be_falsey
       end
     end
   end
@@ -56,8 +63,8 @@ describe Game do
       subject(:board_placing) { described_class.new }
 
       it "places a 'red' at [2][2]" do
-        board_placing.place_on_board("red", 2, 2)
-        expect(board_placing.instance_variable_get(:@board)[2][2]).to eq("red")
+        board_placing.place_on_board("r", 2, 2)
+        expect(board_placing.instance_variable_get(:@board)[2][2]).to eq("r")
       end
     end
   end
@@ -98,7 +105,7 @@ describe Game do
       end
       it "checks for valid_input once" do
         expect(get_input).to receive(:valid_input?).once
-        get_input.player_input("red")
+        get_input.player_input("r")
       end
     end
 
@@ -108,7 +115,7 @@ describe Game do
       end
       it "checks for valid_input thrice" do
         expect(get_input).to receive(:valid_input?).exactly(3).times
-        get_input.player_input("red")
+        get_input.player_input("r")
       end
     end
   end

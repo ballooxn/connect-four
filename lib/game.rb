@@ -4,8 +4,8 @@ class Game
   include Display
 
   def initialize(board = Array.new(6) { Array.new(7, "_") }, input = [], turns = 0)
-    @player_one = "red"
-    @player_two = "yellow"
+    @player_one = "r"
+    @player_two = "y"
     @winner = nil
     @turns = turns
 
@@ -20,29 +20,33 @@ class Game
   end
 
   def game_loop
-    curr_player = "yellow"
+    curr_player = "y"
     until @winner
-      curr_player = curr_player == "yellow" ? "red" : "yellow" # swap player every turn
-      @input = player_input
-      place_on_board(curr_player, input[0].to_i, input[1].to_i)
+      @turns += 1
+      curr_player = curr_player == "y" ? "r" : "y" # swap player every turn
+      @input = player_input(curr_player)
+      place_on_board(curr_player, @input[0], @input[1])
+      Display.display_board(@board)
 
-      @winner = game_over?(player)
+      @winner = game_over?(curr_player)
     end
+    Display.display_winner
   end
 
   def player_input(player)
     input = []
     until valid_input?(input[0], input[1])
-      display_player_input(player)
-      input = gets.chomp.split
+      Display.display_player_input(player)
+      input = gets.chomp.split.map!(&:to_i)
     end
     input
   end
 
   def valid_input?(x, y)
-    return false unless (x.match?(/[0-6]/) && y.match?(/[0-6]/)) && !x.nil? && !y.nil?
+    return false if x.nil? || y.nil?
+    return false unless x.to_s.match?(/[0-6]/) && y.to_s.match?(/[0-6]/)
 
-    return false unless @board[x.to_i][y.to_i] == "_"
+    return false unless @board[x][y] == "_"
 
     true
   end
@@ -78,6 +82,8 @@ class Game
         end
       end
     end
+
+    return "tie" if @turns >= 42
 
     false
   end
