@@ -1,10 +1,12 @@
+require "rainbow"
+
 module Display
   def self.intro
     puts "Welcome to Connect Four!"
   end
 
   def self.display_player_input(player)
-    puts "#{player == 'r' ? 'Red' : 'Yellow'} player, enter the column number (0-6):"
+    puts "#{player == 'r' ? Rainbow('Red').red : Rainbow('Yellow').yellow} player, enter the column number (0-6):"
   end
 
   def self.display_board(board)

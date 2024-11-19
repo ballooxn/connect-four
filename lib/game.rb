@@ -22,13 +22,13 @@ class Game
   def game_loop
     curr_player = "y"
     until @winner
-      @turns += 1
       curr_player = curr_player == "y" ? "r" : "y" # swap player every turn
       @input = player_input(curr_player)
       place_on_board(curr_player, @input)
       Display.display_board(@board)
 
       @winner = game_over?(curr_player)
+      @turns += 1
     end
     Display.display_winner(@winner)
   end
@@ -37,22 +37,20 @@ class Game
     column = nil
     until valid_input?(column)
       Display.display_player_input(player)
-      column = gets.chomp.to_i
+      column = gets.chomp
     end
-    column
+    column.to_i
   end
 
   def valid_input?(column)
-    if column.nil?
-      puts "ERROR! Please input a column number!" unless @turns.zero?
-      return false
-    end
-    unless column.to_s.match?(/[0-6]/)
+    return false if column.nil?
+
+    unless column.match?(/[0-6]/)
       puts "ERROR! Please input a valid column number (0-6)!"
       return false
     end
 
-    unless @board[0][column] == "_"
+    unless @board[0][column.to_i] == "_"
       puts "ERROR! This column is full! Please input a different column."
       return false
     end
