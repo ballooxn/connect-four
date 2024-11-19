@@ -4,7 +4,7 @@ module Display
   end
 
   def self.display_player_input(player)
-    puts "#{player == 'r' ? 'Red' : 'Yellow'} player, enter your two numbers (0-6) seperated by a space:"
+    puts "#{player == 'r' ? 'Red' : 'Yellow'} player, enter the column number (0-6):"
   end
 
   def self.display_board(board)

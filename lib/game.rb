@@ -30,7 +30,7 @@ class Game
 
       @winner = game_over?(curr_player)
     end
-    Display.display_winner
+    Display.display_winner(@winner)
   end
 
   def player_input(player)
@@ -43,10 +43,19 @@ class Game
   end
 
   def valid_input?(column)
-    return false if column.nil?
-    return false unless column.to_s.match?(/[0-6]/)
+    if column.nil?
+      puts "ERROR! Please input a column number!" unless @turns.zero?
+      return false
+    end
+    unless column.to_s.match?(/[0-6]/)
+      puts "ERROR! Please input a valid column number (0-6)!"
+      return false
+    end
 
-    return false unless @board[0][column] == "_"
+    unless @board[0][column] == "_"
+      puts "ERROR! This column is full! Please input a different column."
+      return false
+    end
 
     true
   end
@@ -63,7 +72,6 @@ class Game
       @board[i - 1][column] = player
       break
     end
-    p @board
   end
 
   def game_over?(player)
