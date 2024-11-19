@@ -11,9 +11,9 @@ module Display
     # Change row numbers to column numbers
     puts "\nCurrent Board:"
     board.each_with_index do |row, index|
-      puts "#{index}. #{row.join(' | ')}"
+      puts "  #{row.join(' | ')}"
     end
-    puts "------------"
+    puts "  0.  1.  2.  3.  4.  5.  6."
   end
 
   def self.display_winner(player)

@@ -3,7 +3,7 @@ require_relative "display"
 class Game
   include Display
 
-  def initialize(board = Array.new(6) { Array.new(7, "_") }, input = [], turns = 0)
+  def initialize(board = Array.new(6) { Array.new(7, "_") }, input = nil, turns = 0)
     @player_one = "r"
     @player_two = "y"
     @winner = nil
@@ -25,7 +25,7 @@ class Game
       @turns += 1
       curr_player = curr_player == "y" ? "r" : "y" # swap player every turn
       @input = player_input(curr_player)
-      place_on_board(curr_player, @input[0], @input[1])
+      place_on_board(curr_player, @input)
       Display.display_board(@board)
 
       @winner = game_over?(curr_player)
@@ -34,25 +34,36 @@ class Game
   end
 
   def player_input(player)
-    input = []
-    until valid_input?(input[0], input[1])
+    column = nil
+    until valid_input?(column)
       Display.display_player_input(player)
-      input = gets.chomp.split.map!(&:to_i)
+      column = gets.chomp.to_i
     end
-    input
+    column
   end
 
-  def valid_input?(x, y)
-    return false if x.nil? || y.nil?
-    return false unless x.to_s.match?(/[0-6]/) && y.to_s.match?(/[0-6]/)
+  def valid_input?(column)
+    return false if column.nil?
+    return false unless column.to_s.match?(/[0-6]/)
 
-    return false unless @board[x][y] == "_"
+    return false unless @board[0][column] == "_"
 
     true
   end
 
-  def place_on_board(player, x, y)
-    @board[x][y] = player
+  def place_on_board(player, column)
+    @board.each_with_index do |row, i|
+      if row[column] == "_" && i == 5
+        row[column] = player
+        break
+      elsif row[column] == "_" && i != 5
+        next
+      end
+
+      @board[i - 1][column] = player
+      break
+    end
+    p @board
   end
 
   def game_over?(player)

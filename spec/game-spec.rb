@@ -59,12 +59,14 @@ describe Game do
   end
 
   describe "place_on_board" do
-    context "given 'red' and (2, 2)" do
-      subject(:board_placing) { described_class.new }
+    context "given 'red' and column 3" do
+      board = [Array.new(7, "_"), Array.new(7, "_"), Array.new(7, "_"),
+               Array.new(7, "_"), %w[_ _ _ y _ _ _], %w[_ _ _ y _ _ _]]
+      subject(:board_placing) { described_class.new(board) }
 
-      it "places a 'red' at [2][2]" do
-        board_placing.place_on_board("r", 2, 2)
-        expect(board_placing.instance_variable_get(:@board)[2][2]).to eq("r")
+      it "places a 'red' at [3][3]" do
+        board_placing.place_on_board("r", 3)
+        expect(board_placing.instance_variable_get(:@board)[3][3]).to eq("r")
       end
     end
   end
@@ -74,19 +76,19 @@ describe Game do
 
     context "when given valid input" do
       it "returns true" do
-        expect(verify_input.valid_input?("3", "4")).to be_truthy
+        expect(verify_input.valid_input?(3)).to be_truthy
       end
     end
 
     context "when given input out of range" do
       it "returns false" do
-        expect(verify_input.valid_input?("9", "7")).to be_falsey
+        expect(verify_input.valid_input?(9)).to be_falsey
       end
     end
 
     context "when given letters" do
       it "returns false" do
-        expect(verify_input.valid_input?("a", "o")).to be_falsey
+        expect(verify_input.valid_input?("a")).to be_falsey
       end
     end
   end
